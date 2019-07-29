@@ -1,29 +1,50 @@
 import React from 'react'
 import { connect } from 'react-redux'
+//need curly braces because its a named export
+//in actions file
+import { selectSong } from '../actions'
 
 class SongList extends React.Component {
-    render() {
-      console.log(this.props.songs);
-      const songInfo = this.props.songs.map( (songInfo) => {
-
+    renderList() {
+      return this.props.songs.map( (songs) => {
         return(
-            <li key={songInfo.song} >{songInfo.artist} - {songInfo.song} - {songInfo.duration}</li>
+          <div className="item" key={songs.song}>
+            <div className="right floated content">
+              <button
+                className="ui button primary"
+                onClick={() => this.props.selectSong(songs) }
+              >
+                Select
+              </button>
+            </div>
+
+            <div className="content">{songs.song}</div>
+          </div>
         )
       })
+    }
+
+    render() {
+      // console.log(this.props);
+
       return(
-        <div>
+        <div className="ui divided list">
           <h2>Song List</h2>
-          <ol>{songInfo}</ol>
+          {this.renderList()}
         </div>
       )
     }
   }
 
   const mapStateToProps = (state) => {
+    // console.log(state);
       return { songs: state.songs }
   }
 
-
-
-
-export default connect(mapStateToProps) (SongList);
+//the connect function is going to take that selectSong
+//action creator and pass it to our component as a prop.
+//The selectSong key value is action being imported
+//from the actions index.js file.
+export default connect(mapStateToProps, {
+  selectSong: selectSong
+}) (SongList);
